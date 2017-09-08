@@ -9,7 +9,7 @@ module Hanami
             "HANAMI_WEBPACK_DEV_SERVER_USING" => Webpack.config.dev_server.using?.to_s,
             "HANAMI_WEBPACK_PUBLIC_PATH" => Webpack.config.public_path
           }
-          p envs["HANAMI_WEBPACK_DEV_SERVER_PORT"]
+
           spawn(envs, './node_modules/.bin/webpack-dev-server')
         end
         super
