@@ -8,7 +8,7 @@ module Hanami
     extend Dry::Configurable
 
     setting :manifest_file, 'webpack_manifest.json'
-    setting :public_path, 'public'
+    setting :public_path, 'public/dist'
     setting :dev_server do
       setting :port, '3020'
       setting :host, 'localhost'
