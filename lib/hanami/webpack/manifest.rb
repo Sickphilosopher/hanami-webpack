@@ -15,10 +15,13 @@ module Hanami
           raise Webpack::EntryPointMissingError, "Can't find entry point '#{bundle_name}' in webpack manifest"
         end
 
-        path = Utils::PathPrefix.new('/').join(Webpack.config.public_path).join(path).to_s
+        
 
         if Webpack.config.dev_server.using?
+          path = Utils::PathPrefix.new('/').join(path).to_s
           path = "//#{Webpack.config.dev_server.host}:#{Webpack.config.dev_server.port}#{path}"
+        else
+          path = Utils::PathPrefix.new('/').join(Webpack.config.public_path).join(path).to_s
         end
 
         path
@@ -29,10 +32,11 @@ module Hanami
       end
 
       def self.remote_manifest
-        host = Webpack.config.dev_server_host
-        port = Webpack.config.dev_server_port
+        host = Webpack.config.dev_server.host
+        port = Webpack.config.dev_server.port
         http = Net::HTTP.new(host, port)
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        manifest_path = Utils::PathPrefix.new('/').join(Webpack.config.manifest_file)
         response = http.get(manifest_path).body
         response
       end
