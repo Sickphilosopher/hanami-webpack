@@ -1,4 +1,3 @@
-require 'hanami/utils/blank'
 require_relative 'manifest'
 
 module Hanami
@@ -6,7 +5,7 @@ module Hanami
     module ViewHelper
       def webpack_asset_path(bundle_name)
         return raw('') if bundle_name.strip.empty?
-        raw(Hanami::Webpack::Manifest.bundle_uri(bundle_name))
+        raw(Manifest.bundle_uri(bundle_name))
       end
     end
   end
