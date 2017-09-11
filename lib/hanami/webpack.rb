@@ -12,7 +12,7 @@ module Hanami
     setting :dev_server do
       setting :port, '3020'
       setting :host, 'localhost'
-      setting :using? ,:default do |value|
+      setting :using?, :default do |value|
         if value == :default
           Hanami.env == 'development'
         else
