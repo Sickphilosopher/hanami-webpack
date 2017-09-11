@@ -9,7 +9,7 @@ module Hanami
             "HANAMI_WEBPACK_DEV_SERVER_PORT" => Webpack.config.dev_server.port,
             "HANAMI_WEBPACK_DEV_SERVER_HOST" => Webpack.config.dev_server.host,
             "HANAMI_WEBPACK_DEV_SERVER_USING" => Webpack.config.dev_server.using?,
-            "HANAMI_WEBPACK_PUBLIC_PATH" => Webpack.config.public_path.shellescape
+            "HANAMI_WEBPACK_PUBLIC_PATH" => Webpack.config.public_path
           }
           shellescape_hash(envs)
           spawn(envs, './node_modules/.bin/webpack-dev-server')
