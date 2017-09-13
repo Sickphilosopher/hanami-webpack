@@ -15,20 +15,15 @@ module Hanami
           raise Webpack::EntryPointMissingError, "Can't find entry point '#{bundle_name}' in webpack manifest"
         end
 
-        
+
 
         if Webpack.config.dev_server.using?
-          path = Utils::PathPrefix.new('/').join(path).to_s
-          path = "//#{Webpack.config.dev_server.host}:#{Webpack.config.dev_server.port}#{path}"
+          path = "#{dev_server_path}#{Utils::PathPrefix.new('/').join(path)}"
         else
           path = Utils::PathPrefix.new('/').join(Webpack.config.public_path).join(path).to_s
         end
 
         path
-      end
-
-      def self.manifest_path
-        Utils::PathPrefix.new('/').join(Webpack.config.public_path).join(Webpack.config.manifest_file)
       end
 
       def self.remote_manifest
@@ -42,21 +37,20 @@ module Hanami
       end
 
       def self.static_manifest
-        @_manifest ||= begin
-          path =
-            Hanami
-              .public_directory
-              .join(*Webpack.config.public_path.split('/'))
-              .join(Webpack.config.manifest_file)
-
-          file = File.read(path)
-          file
-        end
+        @_manifest ||= File.read(static_manifest_path)
       end
 
       def self.manifest
         manifest_src = Webpack.config.dev_server.using? ? remote_manifest : static_manifest
-        JSON.parse(manifest_src)
+        Hanami::Utils::Json.parse(manifest_src)
+      end
+
+      def self.static_manifest_path
+        Hanami.root.join(Webpack.config.manifest_dir, Webpack.config.manifest_file)
+      end
+
+      def self.dev_server_path
+        "//#{Webpack.config.dev_server.host}:#{Webpack.config.dev_server.port}"
       end
     end
   end
