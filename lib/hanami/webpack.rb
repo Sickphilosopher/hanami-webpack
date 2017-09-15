@@ -44,7 +44,7 @@ module Hanami
       Hash[hash.map{ |key, value| [key, Shellwords.escape(value)] }]
     end
 
-    def webpack_output_path
+    def self.webpack_output_path
       Utils::PathPrefix.new('/').join(Webpack.config.public_path).join(Webpack.config.output_path)
     end
   end
