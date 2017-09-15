@@ -4,19 +4,25 @@ module Hanami
   module Webpack
     extend Dry::Configurable
 
-    setting :manifest_dir, '.webpack'
-    setting :manifest_file, 'webpack_manifest.json'
+    if Hanami.env == 'development'
+      using_dev_server_default = true
+      cache_manifest_default = false
+    else
+      using_dev_server_default = false
+      cache_manifest_default = true
+    end
+
+    setting :manifest do
+      setting :dir, '.webpack'
+      setting :filename, 'webpack-assets.json'
+    end
+    
     setting :public_path, 'public/dist'
+    setting :cache_manifest?, cache_manifest_default
     setting :dev_server do
       setting :port, '3020'
       setting :host, 'localhost'
-      setting :using?, :default do |value|
-        if value == :default
-          Hanami.env == 'development'
-        else
-          value
-        end
-      end
+      setting :using?, using_dev_server_default
     end
 
     def self.enviroment_variables
@@ -25,7 +31,8 @@ module Hanami
         "HANAMI_WEBPACK_DEV_SERVER_PORT" => Webpack.config.dev_server.port,
         "HANAMI_WEBPACK_DEV_SERVER_HOST" => Webpack.config.dev_server.host,
         "HANAMI_WEBPACK_DEV_SERVER_USING" => Webpack.config.dev_server.using?,
-        "HANAMI_WEBPACK_MANIFEST_PATH" => Webpack::Manifest.static_manifest_path,
+        "HANAMI_WEBPACK_MANIFEST_DIR" => Webpack.config.manifest.dir,
+        "HANAMI_WEBPACK_MANIFEST_FILENAME" => Webpack.config.manifest.filename,
         "HANAMI_WEBPACK_PUBLIC_PATH" => Webpack.config.public_path
       }
       shellescape_hash(envs)
