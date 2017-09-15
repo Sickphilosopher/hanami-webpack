@@ -20,7 +20,7 @@ module Hanami
         if Webpack.config.dev_server.using?
           path = "#{dev_server_path}#{Utils::PathPrefix.new('/').join(js_path)}"
         else
-          path = Utils::PathPrefix.new('/').join(Webpack.config.public_path).join(js_path).to_s
+          path = Utils::PathPrefix.new('/').join(Webpack.config.output_path).join(js_path).to_s
         end
 
         path

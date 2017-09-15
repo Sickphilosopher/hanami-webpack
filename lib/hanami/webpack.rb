@@ -16,8 +16,9 @@ module Hanami
       setting :dir, '.webpack'
       setting :filename, 'webpack-assets.json'
     end
-    
-    setting :public_path, 'public/dist'
+
+    setting :public_path, 'public'
+    setting :output_path, 'dist'
     setting :cache_manifest?, cache_manifest_default
     setting :dev_server do
       setting :port, '3020'
@@ -33,7 +34,7 @@ module Hanami
         "HANAMI_WEBPACK_DEV_SERVER_USING" => Webpack.config.dev_server.using?,
         "HANAMI_WEBPACK_MANIFEST_DIR" => Webpack.config.manifest.dir,
         "HANAMI_WEBPACK_MANIFEST_FILENAME" => Webpack.config.manifest.filename,
-        "HANAMI_WEBPACK_PUBLIC_PATH" => Webpack.config.public_path
+        "HANAMI_WEBPACK_OUTPUT_PATH" => webpack_output_path
       }
       shellescape_hash(envs)
     end
@@ -41,6 +42,10 @@ module Hanami
     private
     def self.shellescape_hash(hash)
       Hash[hash.map{ |key, value| [key, Shellwords.escape(value)] }]
+    end
+
+    def webpack_output_path
+      Utils::PathPrefix.new('/').join(Webpack.config.public_path).join(Webpack.config.output_path)
     end
   end
 end
