@@ -17,7 +17,6 @@ module Hanami
 
       desc 'build', 'Build Webpack bundles'
       def build
-        require 'hanami/webpack/commands/build'
         Hanami::Webpack::Commands::Build.new(options).start
       end
     end
