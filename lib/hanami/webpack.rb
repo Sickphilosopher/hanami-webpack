@@ -20,6 +20,7 @@ module Hanami
     setting :public_path, 'public'
     setting :output_path, 'dist'
     setting :cache_manifest?, cache_manifest_default
+    setting :webpack_config_path, Hanami.root.join('webpack.config.js')
     setting :dev_server do
       setting :port, '3020'
       setting :host, 'localhost'
@@ -29,6 +30,7 @@ module Hanami
     def self.enviroment_variables
       envs = {
         "HANAMI_WEBPACK_ENV" => Hanami.env,
+        "HANAMI_WEBPACK_ROOT" => Hanami.root,
         "HANAMI_WEBPACK_DEV_SERVER_PORT" => Webpack.config.dev_server.port,
         "HANAMI_WEBPACK_DEV_SERVER_HOST" => Webpack.config.dev_server.host,
         "HANAMI_WEBPACK_DEV_SERVER_USING" => Webpack.config.dev_server.using?,
@@ -37,6 +39,10 @@ module Hanami
         "HANAMI_WEBPACK_OUTPUT_PATH" => webpack_output_path
       }
       shellescape_hash(envs)
+    end
+
+    def self.webpack_cli_arguments
+      ['--config', config.webpack_config_path.to_s]
     end
 
     private
