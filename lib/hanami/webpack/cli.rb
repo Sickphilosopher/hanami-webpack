@@ -2,6 +2,7 @@ require 'thor'
 
 require 'hanami/cli_base'
 require 'hanami/webpack/commands/build'
+require 'hanami/webpack/commands/dev_server'
 
 module Hanami
   module Webpack
@@ -18,6 +19,11 @@ module Hanami
       desc 'build', 'Build Webpack bundles'
       def build
         Hanami::Webpack::Commands::Build.new(options).start
+      end
+
+      desc 'dev-server', 'Start Webpack development server'
+      def dev_server
+        Hanami::Webpack::Commands::DevServer.new(options).start
       end
     end
   end
