@@ -7,23 +7,24 @@ require_relative 'errors/entry_point_missing_error'
 module Hanami
   module Webpack
     class Manifest
-      def self.bundle_uri(bundle_name)
+      def self.bundle_uri(bundle_name, type: :js)
+        bundle = get_bundle(bundle_name)
+        path = bundle.fetch(type.to_s)
+        build_path(path)
+      end
 
-        #raise Webpack::Errors::BuildError, manifest['errors'] unless Utils::Blank.blank?(manifest['errors'])
+      def self.build_path(path)
+        if Webpack.config.dev_server.using?
+          return "#{dev_server_path}#{Utils::PathPrefix.new('/').join(path)}"
+        end
 
-        bundle = manifest.fetch(bundle_name) do
+        Utils::PathPrefix.new('/').join(Webpack.config.output_path).join(path).to_s
+      end
+
+      def self.get_bundle(bundle_name)
+        manifest.fetch(bundle_name) do
           raise Webpack::EntryPointMissingError, "Can't find entry point '#{bundle_name}' in webpack manifest"
         end
-
-        js_path = bundle.fetch('js')
-
-        if Webpack.config.dev_server.using?
-          path = "#{dev_server_path}#{Utils::PathPrefix.new('/').join(js_path)}"
-        else
-          path = Utils::PathPrefix.new('/').join(Webpack.config.output_path).join(js_path).to_s
-        end
-
-        path
       end
 
       def self.static_manifest
