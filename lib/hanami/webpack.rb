@@ -36,7 +36,8 @@ module Hanami
         "HANAMI_WEBPACK_DEV_SERVER_USING" => Webpack.config.dev_server.using?,
         "HANAMI_WEBPACK_MANIFEST_DIR" => Webpack.config.manifest.dir,
         "HANAMI_WEBPACK_MANIFEST_FILENAME" => Webpack.config.manifest.filename,
-        "HANAMI_WEBPACK_OUTPUT_PATH" => webpack_output_path
+        "HANAMI_WEBPACK_OUTPUT_PATH" => webpack_output_path,
+        "HANAMI_WEBPACK_WEB_PATH" => Webpack.config.output_path
       }
       shellescape_hash(envs)
     end
