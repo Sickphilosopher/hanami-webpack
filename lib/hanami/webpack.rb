@@ -17,8 +17,8 @@ module Hanami
       setting :filename, 'webpack-assets.json'
     end
 
-    setting :public_path, 'public'
-    setting :output_path, 'dist'
+    setting :public_path, 'public' #relative to Hanami.root
+    setting :output_path, 'dist' #relative to public_path
     setting :cache_manifest?, cache_manifest_default
     setting :webpack_config_path, Hanami.root.join('webpack.config.js')
     setting :dev_server do
@@ -31,13 +31,13 @@ module Hanami
       envs = {
         "HANAMI_WEBPACK_ENV" => Hanami.env,
         "HANAMI_WEBPACK_ROOT" => Hanami.root,
-        "HANAMI_WEBPACK_DEV_SERVER_PORT" => Webpack.config.dev_server.port,
-        "HANAMI_WEBPACK_DEV_SERVER_HOST" => Webpack.config.dev_server.host,
-        "HANAMI_WEBPACK_DEV_SERVER_USING" => Webpack.config.dev_server.using?,
-        "HANAMI_WEBPACK_MANIFEST_DIR" => Webpack.config.manifest.dir,
-        "HANAMI_WEBPACK_MANIFEST_FILENAME" => Webpack.config.manifest.filename,
+        "HANAMI_WEBPACK_DEV_SERVER_PORT" => config.dev_server.port,
+        "HANAMI_WEBPACK_DEV_SERVER_HOST" => config.dev_server.host,
+        "HANAMI_WEBPACK_DEV_SERVER_USING" => config.dev_server.using?,
+        "HANAMI_WEBPACK_MANIFEST_DIR" => absolute_path(config.manifest.dir),
+        "HANAMI_WEBPACK_MANIFEST_FILENAME" => config.manifest.filename,
         "HANAMI_WEBPACK_OUTPUT_PATH" => webpack_output_path,
-        "HANAMI_WEBPACK_WEB_PATH" => Webpack.config.output_path
+        "HANAMI_WEBPACK_WEB_PATH" => config.output_path
       }
       shellescape_hash(envs)
     end
@@ -52,7 +52,11 @@ module Hanami
     end
 
     def self.webpack_output_path
-      Utils::PathPrefix.new('/').join(Webpack.config.public_path).join(Webpack.config.output_path)
+      Hanami.root.join(config.public_path).join(config.output_path)
+    end
+
+    def self.absolute_path(path)
+      Hanami.root.join(path)
     end
   end
 end
