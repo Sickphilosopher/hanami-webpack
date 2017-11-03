@@ -6,7 +6,7 @@ module Hanami
       def webpack_js(bundle_name, options = {})
         path = Manifest.bundle_uri(bundle_name, type: :js)
         html do
-          script options.merg(src: path)
+          script options.merge(src: path)
         end
       end
 
@@ -15,7 +15,7 @@ module Hanami
         return raw('') if Webpack.config.dev_server.using?
         path = Manifest.bundle_uri(bundle_name, type: :css)
         html do
-          link options.megre(href: path, rel: 'stylesheet', type: 'text/css')
+          link options.merge(href: path, rel: 'stylesheet', type: 'text/css')
         end
       end
     end
