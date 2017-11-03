@@ -3,16 +3,20 @@ require_relative 'manifest'
 module Hanami
   module Webpack
     module ViewHelper
-      def webpack_js(bundle_name)
+      def webpack_js(bundle_name, options = {})
         path = Manifest.bundle_uri(bundle_name, type: :js)
-        javascript path
+        html do
+          script options.merg(src: path)
+        end
       end
 
-      def webpack_css(bundle_name)
+      def webpack_css(bundle_name, options = {})
         #styles not extracted in dev environment
         return raw('') if Webpack.config.dev_server.using?
         path = Manifest.bundle_uri(bundle_name, type: :css)
-        stylesheet path
+        html do
+          link options.megre(href: path, rel: 'stylesheet', type: 'text/css')
+        end
       end
     end
   end
