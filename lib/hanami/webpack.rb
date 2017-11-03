@@ -37,7 +37,7 @@ module Hanami
         "HANAMI_WEBPACK_MANIFEST_DIR" => absolute_path(config.manifest.dir),
         "HANAMI_WEBPACK_MANIFEST_FILENAME" => config.manifest.filename,
         "HANAMI_WEBPACK_OUTPUT_PATH" => webpack_output_path,
-        "HANAMI_WEBPACK_WEB_PATH" => config.output_path
+        "HANAMI_WEBPACK_WEB_PATH" => web_path
       }
       shellescape_hash(envs)
     end
@@ -57,6 +57,10 @@ module Hanami
 
     def self.absolute_path(path)
       Hanami.root.join(path)
+    end
+
+    def self.web_path
+      p Utils::PathPrefix.new('/').join(config.output_path, '')
     end
   end
 end
