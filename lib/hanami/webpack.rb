@@ -21,6 +21,7 @@ module Hanami
     setting :output_path, 'dist' #relative to public_path
     setting :cache_manifest?, cache_manifest_default
     setting :webpack_config_path, Hanami.root.join('webpack.config.js')
+    setting :hot_reload, true
     setting :dev_server do
       setting :port, '3020'
       setting :host, 'localhost'
@@ -43,7 +44,9 @@ module Hanami
     end
 
     def self.webpack_cli_arguments
-      ['--config', config.webpack_config_path.to_s]
+      arguments = ['--config', config.webpack_config_path.to_s]
+      arguments << '--hot' if config.hot_reload
+      arguments
     end
 
     private
