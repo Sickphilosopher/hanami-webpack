@@ -63,7 +63,7 @@ module Hanami
     end
 
     def self.web_path
-      p Utils::PathPrefix.new('/').join(config.output_path, '')
+      Utils::PathPrefix.new('/').join(config.output_path, '')
     end
   end
 end
