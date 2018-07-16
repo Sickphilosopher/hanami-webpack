@@ -7,8 +7,8 @@ require_relative 'errors/entry_point_missing_error'
 module Hanami
   module Webpack
     class Manifest
-      def self.bundle_uri(bundle_name, type: :js)
-        bundle = get_bundle(bundle_name)
+      def self.bundle_uri(bundle_name, type: :js, app: null)
+        bundle = get_bundle(bundle_name, app)
         path = bundle.fetch(type.to_s)
         build_path(path)
       end
@@ -21,25 +21,27 @@ module Hanami
         Utils::PathPrefix.new('/').join(Webpack.config.output_path).join(path).to_s
       end
 
-      def self.get_bundle(bundle_name)
-        manifest.fetch(bundle_name) do
-          raise Webpack::EntryPointMissingError, "Can't find entry point '#{bundle_name}' in webpack manifest"
+      def self.get_bundle(bundle_name, app)
+        manifest(app).fetch(bundle_name) do
+          raise Errors::EntryPointMissingError, "Can't find entry point '#{bundle_name}' in webpack manifest"
         end
       end
 
-      def self.static_manifest
-        File.read(static_manifest_path)
+      def self.static_manifest(app)
+        File.read(static_manifest_path(app))
       rescue Errno::ENOENT => e
-        raise Webpack::Errors::ManifestNotFoundError.new(static_manifest_path)
+        raise Webpack::Errors::ManifestNotFoundError.new(static_manifest_path(app))
       end
 
-      def self.manifest
+      def self.manifest(app)
         @_manifest = nil unless Webpack.config.cache_manifest?
-        @_manifest ||= Hanami::Utils::Json.parse(static_manifest)
+        @_manifest ||= Hanami::Utils::Json.parse(static_manifest(app))
       end
 
-      def self.static_manifest_path
-        Hanami.root.join(Webpack.config.manifest.dir, Webpack.config.manifest.filename)
+      def self.static_manifest_path(app)
+        filename = Webpack.config.manifest.filename
+        filename.gsub!('[app]', app.to_s) if app
+        Hanami.root.join(Webpack.config.manifest.dir, filename)
       end
 
       def self.dev_server_path
