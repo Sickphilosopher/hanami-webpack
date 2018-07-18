@@ -17,7 +17,7 @@ module Hanami
           def webpack_exe
             executable = WEBPACK_EXECUTABLES
               .map { |e| node_modules_exe_path(e) }
-              .first { |e| File.exists?(e) }
+              .find { |e| File.exists?(e) }
           end
 
           def node_modules_exe_path(exe_name)
