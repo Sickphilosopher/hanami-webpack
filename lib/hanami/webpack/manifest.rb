@@ -34,8 +34,9 @@ module Hanami
       end
 
       def self.manifest(app)
-        @_manifest = nil unless Webpack.config.cache_manifest?
-        @_manifest ||= Hanami::Utils::Json.parse(static_manifest(app))
+        @_manifests = nil unless Webpack.config.cache_manifest?
+        @_manifests ||= {}
+        @_manifests[app || :main] ||= Hanami::Utils::Json.parse(static_manifest(app))
       end
 
       def self.static_manifest_path(app)
