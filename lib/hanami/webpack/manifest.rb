@@ -41,7 +41,7 @@ module Hanami
 
       def self.static_manifest_path(app)
         filename = Webpack.config.manifest.filename
-        filename.gsub!('[app]', app.to_s) if app
+        filename = filename.gsub('[app]', app.to_s) if app
         Hanami.root.join(Webpack.config.manifest.dir, filename)
       end
 
