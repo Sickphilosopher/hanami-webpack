@@ -42,5 +42,3 @@ module Hanami
     end
   end
 end
-
-Hanami::CLI.register "webpack build", Hanami::Webpack::Cli::Commands::Build

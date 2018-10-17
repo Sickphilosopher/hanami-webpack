@@ -15,5 +15,3 @@ module Hanami
     end
   end
 end
-
-Hanami::CLI.register "webpack version", Hanami::Webpack::Cli::Commands::Version

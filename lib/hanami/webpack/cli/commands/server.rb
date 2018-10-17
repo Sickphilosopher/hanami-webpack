@@ -17,5 +17,3 @@ module Hanami
     end
   end
 end
-
-Hanami::CLI.register "webpack server", Hanami::Webpack::Cli::Commands::Server
