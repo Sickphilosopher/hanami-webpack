@@ -18,7 +18,6 @@ module Hanami
       setting :port, 3020
       setting :host, 'localhost'
       setting :using, false
-      setting :auto_start, true
       setting :hot_reload, true
     end
 
