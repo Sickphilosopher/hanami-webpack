@@ -14,7 +14,7 @@ module Hanami
       end
 
       def self.build_path(path)
-        if Webpack.config.dev_server.using?
+        if Webpack.config.dev_server.using
           return "#{dev_server_path}#{Utils::PathPrefix.new('/').join(path)}"
         end
 
@@ -34,7 +34,7 @@ module Hanami
       end
 
       def self.manifest(app)
-        @_manifests = nil unless Webpack.config.cache_manifest?
+        @_manifests = nil unless Webpack.config.manifest.cache
         @_manifests ||= {}
         @_manifests[app || :main] ||= Hanami::Utils::Json.parse(static_manifest(app))
       end

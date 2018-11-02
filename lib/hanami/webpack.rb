@@ -4,28 +4,22 @@ module Hanami
   module Webpack
     extend Dry::Configurable
 
-    if Hanami.env == 'development'
-      using_dev_server_default = true
-      cache_manifest_default = false
-    else
-      using_dev_server_default = false
-      cache_manifest_default = true
-    end
 
     setting :manifest do
       setting :dir, '.webpack'
       setting :filename, 'webpack-assets.json'
+      setting :cache, true
     end
 
     setting :public_path, 'public' #relative to Hanami.root
     setting :output_path, 'dist' #relative to public_path
-    setting :cache_manifest?, cache_manifest_default
-    setting :webpack_config_path, Hanami.root.join('webpack.config.js')
-    setting :hot_reload, true
+    setting :webpack_config_path, 'webpack.config.js' #relative to Hanami.root
     setting :dev_server do
-      setting :port, '3020'
+      setting :port, 3020
       setting :host, 'localhost'
-      setting :using?, using_dev_server_default
+      setting :using, false
+      setting :auto_start, true
+      setting :hot_reload, true
     end
 
     def self.enviroment_variables
@@ -34,7 +28,7 @@ module Hanami
         "HANAMI_WEBPACK_ROOT" => Hanami.root,
         "HANAMI_WEBPACK_DEV_SERVER_PORT" => config.dev_server.port,
         "HANAMI_WEBPACK_DEV_SERVER_HOST" => config.dev_server.host,
-        "HANAMI_WEBPACK_DEV_SERVER_USING" => config.dev_server.using?,
+        "HANAMI_WEBPACK_DEV_SERVER_USING" => config.dev_server.using,
         "HANAMI_WEBPACK_MANIFEST_DIR" => absolute_path(config.manifest.dir),
         "HANAMI_WEBPACK_MANIFEST_FILENAME" => config.manifest.filename,
         "HANAMI_WEBPACK_OUTPUT_PATH" => webpack_output_path,
@@ -44,8 +38,9 @@ module Hanami
     end
 
     def self.webpack_cli_arguments
-      arguments = ['--config', config.webpack_config_path.to_s]
-      arguments << '--hot' if config.hot_reload
+      absolute_webpack_config_path = Hanami.root.join(config.webpack_config_path)
+      arguments = ['--config', absolute_webpack_config_path.to_s]
+      arguments << '--hot' if config.dev_server.hot_reload
       arguments
     end
 

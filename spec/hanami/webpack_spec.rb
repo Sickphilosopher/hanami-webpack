@@ -16,14 +16,8 @@ RSpec.describe Hanami::Webpack do
       Hanami::Webpack.reset_config
     end
 
-    it "sets dev_server.using? to true in development env" do
-      allow(Hanami).to receive(:env).and_return("development")
-      expect(Hanami::Webpack.config.dev_server.using?).to be true
-    end
-
-    it "sets dev_server.using? to false if env != development" do
-      allow(Hanami).to receive(:env).and_return("production")
-      expect(Hanami::Webpack.config.dev_server.using?).to be false
+    it "sets dev_server.using to false" do
+      expect(Hanami::Webpack.config.dev_server.using).to be false
     end
   end
 end
