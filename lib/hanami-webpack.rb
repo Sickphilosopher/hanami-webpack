@@ -4,7 +4,6 @@ require 'hanami/utils/blank'
 require 'hanami/config/security'
 require_relative 'hanami/webpack'
 require_relative 'hanami/webpack/view_helper'
-require_relative 'hanami/webpack/dev_server'
 require_relative 'hanami/webpack/security_headers_hijack'
 
 #commands for cli
