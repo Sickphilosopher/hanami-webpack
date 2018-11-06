@@ -11,5 +11,4 @@ require_relative 'hanami/webpack/security_headers_hijack'
 require_relative 'hanami/webpack/cli/commands'
 
 Hanami::Config::Security.prepend(Hanami::Webpack::SecurityHeadersHijack)
-Hanami::Server.prepend(Hanami::Webpack::DevServer)
 Hanami::View.prepend(Hanami::Webpack::ViewHelper)
