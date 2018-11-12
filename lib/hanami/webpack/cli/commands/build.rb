@@ -1,18 +1,16 @@
 
-require "hanami/cli/commands"
+require_relative 'base_command'
 
 module Hanami
   module Webpack
     module Cli
       module Commands
-        class Build < Hanami::CLI::Commands::Command
+        class Build < BaseCommand
           WEBPACK_EXECUTABLES = %w(parallel-webpack webpack)
-          requires 'finalizers'
           desc 'Build Webpack bundles'
-          argument :config, desc: "Config overrides"
 
           def call(config: '', **)
-            override_config(config) if config.length > 0
+            super
             exec Webpack.enviroment_variables, webpack_exe, *Webpack.webpack_cli_arguments
           end
 
@@ -25,17 +23,6 @@ module Hanami
 
           private def node_modules_exe_path(exe_name)
             "./node_modules/.bin/#{exe_name}"
-          end
-
-          private def override_config(config)
-            overrides = config.split(/\s+/).map {|c| c.split(?=) }.to_h
-            return if overrides.count == 0
-
-            Webpack.configure do |configuration|
-              overrides.each do |key, value|
-                configuration.send((key + ?=).to_sym, value)
-              end
-            end
           end
         end
       end

@@ -1,4 +1,4 @@
-require "hanami/cli/commands"
+require_relative 'base_command'
 
 module Hanami
   module Webpack

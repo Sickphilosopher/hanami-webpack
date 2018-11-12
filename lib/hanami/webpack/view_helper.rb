@@ -12,7 +12,7 @@ module Hanami
 
       def webpack_css(bundle_name, options = {})
         #styles not extracted in dev environment
-        return raw('') if Webpack.config.dev_server.using
+        return raw('') if Webpack.config.use_dev_server?
         path = Manifest.bundle_uri(bundle_name, type: :css, app: options.delete(:app))
         html do
           link options.merge(href: path, rel: 'stylesheet', type: 'text/css')

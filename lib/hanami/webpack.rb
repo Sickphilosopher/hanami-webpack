@@ -4,7 +4,6 @@ module Hanami
   module Webpack
     extend Dry::Configurable
 
-
     setting :manifest do
       setting :dir, '.webpack'
       setting :filename, 'webpack-assets.json'
@@ -17,8 +16,9 @@ module Hanami
     setting :dev_server do
       setting :port, 3020
       setting :host, 'localhost'
-      setting :using, false
+      setting :using, :auto
       setting :hot_reload, true
+      setting :auto_start, :true
     end
 
     def self.enviroment_variables
@@ -27,7 +27,7 @@ module Hanami
         "HANAMI_WEBPACK_ROOT" => Hanami.root,
         "HANAMI_WEBPACK_DEV_SERVER_PORT" => config.dev_server.port,
         "HANAMI_WEBPACK_DEV_SERVER_HOST" => config.dev_server.host,
-        "HANAMI_WEBPACK_DEV_SERVER_USING" => config.dev_server.using,
+        "HANAMI_WEBPACK_DEV_SERVER_USING" => config.use_dev_server?,
         "HANAMI_WEBPACK_MANIFEST_DIR" => absolute_path(config.manifest.dir),
         "HANAMI_WEBPACK_MANIFEST_FILENAME" => config.manifest.filename,
         "HANAMI_WEBPACK_OUTPUT_PATH" => webpack_output_path,
@@ -44,6 +44,7 @@ module Hanami
     end
 
     private
+
     def self.shellescape_hash(hash)
       Hash[hash.map{ |key, value| [key, Shellwords.escape(value)] }]
     end
@@ -58,6 +59,16 @@ module Hanami
 
     def self.web_path
       Utils::PathPrefix.new('/').join(config.output_path, '')
+    end
+
+    def self.load_app_config
+      require Hanami.root.join('config', 'initializers', 'webpack')
+    end
+
+    def self.use_dev_server?
+      return true if Webpack.config.dev_server.using
+      return true if Webpack.config.dev_server.using == :auto && Hanami.env?(:development)
+      return false
     end
   end
 end
