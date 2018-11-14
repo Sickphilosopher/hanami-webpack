@@ -17,7 +17,6 @@ module Hanami
       setting :port, 3020
       setting :host, 'localhost'
       setting :using, :auto
-      setting :hot_reload, true
       setting :auto_start, :true
     end
 
@@ -39,7 +38,6 @@ module Hanami
     def self.webpack_cli_arguments
       absolute_webpack_config_path = Hanami.root.join(config.webpack_config_path)
       arguments = ['--config', absolute_webpack_config_path.to_s]
-      arguments << '--hot' if config.dev_server.hot_reload
       arguments
     end
 
