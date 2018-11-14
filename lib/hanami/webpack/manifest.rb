@@ -14,7 +14,7 @@ module Hanami
       end
 
       def self.build_path(path)
-        if Webpack.config.use_dev_server?
+        if Webpack.use_dev_server?
           return "#{dev_server_path}#{Utils::PathPrefix.new('/').join(path)}"
         end
 

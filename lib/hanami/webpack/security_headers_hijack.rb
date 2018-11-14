@@ -8,7 +8,7 @@ module Hanami
 
         new_script_src_directive = "script-src 'self' 'unsafe-eval'"
 
-        if Hanami::Webpack.config.use_dev_server?
+        if Hanami::Webpack.use_dev_server?
           new_script_src_directive +=
             " http://#{Hanami::Webpack.config.dev_server.host}:#{Hanami::Webpack.config.dev_server.port}"
         end

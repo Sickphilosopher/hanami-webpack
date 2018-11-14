@@ -27,7 +27,7 @@ module Hanami
         "HANAMI_WEBPACK_ROOT" => Hanami.root,
         "HANAMI_WEBPACK_DEV_SERVER_PORT" => config.dev_server.port,
         "HANAMI_WEBPACK_DEV_SERVER_HOST" => config.dev_server.host,
-        "HANAMI_WEBPACK_DEV_SERVER_USING" => config.use_dev_server?,
+        "HANAMI_WEBPACK_DEV_SERVER_USING" => Webpack.use_dev_server?,
         "HANAMI_WEBPACK_MANIFEST_DIR" => absolute_path(config.manifest.dir),
         "HANAMI_WEBPACK_MANIFEST_FILENAME" => config.manifest.filename,
         "HANAMI_WEBPACK_OUTPUT_PATH" => webpack_output_path,
