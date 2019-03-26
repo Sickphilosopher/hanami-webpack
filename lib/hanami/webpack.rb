@@ -13,6 +13,7 @@ module Hanami
     setting :public_path, 'public' #relative to Hanami.root
     setting :output_path, 'dist' #relative to public_path
     setting :webpack_config_path, 'webpack.config.js' #relative to Hanami.root
+    setting :stage, nil
     setting :dev_server do
       setting :port, 3020
       setting :host, 'localhost'
@@ -23,6 +24,7 @@ module Hanami
     def self.enviroment_variables
       envs = {
         "HANAMI_WEBPACK_ENV" => Hanami.env,
+        "HANAMI_WEBPACK_STAGE" => config.stage || Hanami.env,
         "HANAMI_WEBPACK_ROOT" => Hanami.root,
         "HANAMI_WEBPACK_DEV_SERVER_PORT" => config.dev_server.port,
         "HANAMI_WEBPACK_DEV_SERVER_HOST" => config.dev_server.host,
