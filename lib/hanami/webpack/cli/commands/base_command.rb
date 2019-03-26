@@ -21,13 +21,17 @@ module Hanami
           end
 
           private def override_config(config)
-
             overrides = config.split(/\s+/).map {|c| c.split(?=) }.to_h
             return if overrides.count == 0
 
             Webpack.configure do |configuration|
               overrides.each do |key, value|
-                configuration.send((key + ?=).to_sym, value)
+                *sub_keys, last_key = key.split('.')
+                current_config = configuration
+                sub_keys.each do |k|
+                  current_config = current_config.send(k)
+                end
+                current_config.send((last_key + ?=).to_sym, value)
               end
             end
           end
