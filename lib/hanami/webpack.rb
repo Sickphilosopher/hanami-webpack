@@ -18,7 +18,8 @@ module Hanami
       setting :port, 3020
       setting :host, 'localhost'
       setting :using, :auto
-      setting :auto_start, :true
+      setting :auto_start, true
+      setting :https, false
     end
 
     def self.enviroment_variables
