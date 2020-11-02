@@ -20,6 +20,9 @@ module Hanami
       setting :using, :auto
       setting :auto_start, true
       setting :https, false
+      setting :cert_dir, ''
+      setting :cert_name, ''
+      setting :hot, true
     end
 
     def self.enviroment_variables
@@ -29,6 +32,10 @@ module Hanami
         "HANAMI_WEBPACK_ROOT" => Hanami.root,
         "HANAMI_WEBPACK_DEV_SERVER_PORT" => config.dev_server.port,
         "HANAMI_WEBPACK_DEV_SERVER_HOST" => config.dev_server.host,
+        "HANAMI_WEBPACK_DEV_SERVER_HTTPS" => config.dev_server.https,
+        "HANAMI_WEBPACK_DEV_SERVER_HOT" => config.dev_server.hot,
+        "HANAMI_WEBPACK_DEV_SERVER_CERT_DIR" => config.dev_server.cert_dir,
+        "HANAMI_WEBPACK_DEV_SERVER_CERT_NAME" => config.dev_server.cert_name,
         "HANAMI_WEBPACK_DEV_SERVER_USING" => Webpack.use_dev_server?,
         "HANAMI_WEBPACK_MANIFEST_DIR" => absolute_path(config.manifest.dir),
         "HANAMI_WEBPACK_MANIFEST_FILENAME" => config.manifest.filename,
