@@ -6,7 +6,7 @@ module Hanami
         address = "#{Hanami::Webpack.config.dev_server.host}:#{Hanami::Webpack.config.dev_server.port}"
         {
           'script-src': %W(#{scheme}://#{address}),
-          'connect-src': %W(#{scheme}://#{address} wss://#{address}),
+          'connect-src': %W(#{scheme}://#{address} ws://#{address} wss://#{address}),
           'img-src': %W(#{scheme}://#{address}),
           'font-src': %W(#{scheme}://#{address})
         }
