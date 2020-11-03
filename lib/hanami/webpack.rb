@@ -14,6 +14,8 @@ module Hanami
     setting :output_path, 'dist' #relative to public_path
     setting :webpack_config_path, 'webpack.config.js' #relative to Hanami.root
     setting :stage, nil
+    setting :envs_prefix, 'HANAMI_WEBPACK'
+    setting :custom_envs, {}
     setting :dev_server do
       setting :port, 3020
       setting :host, 'localhost'
@@ -27,22 +29,32 @@ module Hanami
 
     def self.enviroment_variables
       envs = {
-        "HANAMI_WEBPACK_ENV" => Hanami.env,
-        "HANAMI_WEBPACK_STAGE" => config.stage || Hanami.env,
-        "HANAMI_WEBPACK_ROOT" => Hanami.root,
-        "HANAMI_WEBPACK_DEV_SERVER_PORT" => config.dev_server.port,
-        "HANAMI_WEBPACK_DEV_SERVER_HOST" => config.dev_server.host,
-        "HANAMI_WEBPACK_DEV_SERVER_HTTPS" => config.dev_server.https,
-        "HANAMI_WEBPACK_DEV_SERVER_HOT" => config.dev_server.hot,
-        "HANAMI_WEBPACK_DEV_SERVER_CERT_DIR" => config.dev_server.cert_dir,
-        "HANAMI_WEBPACK_DEV_SERVER_CERT_NAME" => config.dev_server.cert_name,
-        "HANAMI_WEBPACK_DEV_SERVER_USING" => Webpack.use_dev_server?,
-        "HANAMI_WEBPACK_MANIFEST_DIR" => absolute_path(config.manifest.dir),
-        "HANAMI_WEBPACK_MANIFEST_FILENAME" => config.manifest.filename,
-        "HANAMI_WEBPACK_OUTPUT_PATH" => webpack_output_path,
-        "HANAMI_WEBPACK_WEB_PATH" => web_path
+        env: Hanami.env,
+        stage: config.stage || Hanami.env,
+        root: Hanami.root,
+        dev_server_port: config.dev_server.port,
+        dev_server_host: config.dev_server.host,
+        dev_server_https: config.dev_server.https,
+        dev_server_hot: config.dev_server.hot,
+        dev_server_cert_dir: config.dev_server.cert_dir,
+        dev_server_cert_name: config.dev_server.cert_name,
+        dev_server_using: Webpack.use_dev_server?,
+        manifest_dir: absolute_path(config.manifest.dir),
+        manifest_filename: config.manifest.filename,
+        output_path: webpack_output_path,
+        web_path: web_path,
       }
-      shellescape_hash(envs)
+
+      config.custom_envs.each do |k, v|
+        envs["custom_#{k}".to_sym] = v
+      end
+
+      named_envs = envs.map do |k, v|
+        key = "#{config.envs_prefix}_#{k.upcase}"
+        [key, v]
+      end.to_h
+
+      shellescape_hash(named_envs)
     end
 
     def self.webpack_cli_arguments
