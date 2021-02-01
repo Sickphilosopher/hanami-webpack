@@ -10,7 +10,7 @@ module Hanami
 
           def call(*)
             super
-            exec Webpack.enviroment_variables, './node_modules/.bin/webpack-dev-server', *Webpack.webpack_cli_arguments
+            exec Webpack.environment_variables, "yarn", "run", "webpack", "serve", *Webpack.webpack_cli_arguments
           end
         end
       end

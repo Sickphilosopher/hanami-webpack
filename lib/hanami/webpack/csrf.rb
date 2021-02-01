@@ -3,12 +3,15 @@ module Hanami
     module CSRF
       def self.dev_server_csrf
         scheme = Hanami::Webpack.config.dev_server.https ? 'https' : 'http'
-        address = "#{Hanami::Webpack.config.dev_server.host}:#{Hanami::Webpack.config.dev_server.port}"
+        addresses = Hanami::Webpack.config.dev_server.ports.map do |app, port|
+          "#{Hanami::Webpack.config.dev_server.host}:#{port}"
+        end
+
         {
-          'script-src': %W(#{scheme}://#{address}),
-          'connect-src': %W(#{scheme}://#{address} ws://#{address} wss://#{address}),
-          'img-src': %W(#{scheme}://#{address}),
-          'font-src': %W(#{scheme}://#{address})
+          'script-src': addresses.map { |address| "#{scheme}://#{address}" },
+          'connect-src': addresses.map { |address| %W(#{scheme}://#{address} ws://#{address} wss://#{address})}.flatten,
+          'img-src': addresses.map { |address| "#{scheme}://#{address}" },
+          'font-src': addresses.map { |address| "#{scheme}://#{address}" }
         }
       end
     end

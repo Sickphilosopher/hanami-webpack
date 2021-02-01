@@ -16,7 +16,9 @@ module Hanami
     setting :stage, nil
     setting :envs_prefix, 'HANAMI_WEBPACK'
     setting :custom_envs, {}
+    setting :apps, []
     setting :dev_server do
+      setting :ports, {}
       setting :port, 3020
       setting :host, 'localhost'
       setting :using, :auto
@@ -27,8 +29,9 @@ module Hanami
       setting :hot, true
     end
 
-    def self.enviroment_variables
+    def self.environment_variables
       envs = {
+        apps: config.apps.map(&:to_s).join(','),
         env: Hanami.env,
         stage: config.stage || Hanami.env,
         root: Hanami.root,
@@ -45,8 +48,14 @@ module Hanami
         web_path: web_path,
       }
 
+      if config.dev_server.ports
+        config.dev_server.ports.each do |k,v|
+          envs[:"dev_server_#{k}_port"] = v
+        end
+      end
+
       config.custom_envs.each do |k, v|
-        envs["custom_#{k}".to_sym] = v
+        envs[:"custom_#{k}"] = v
       end
 
       named_envs = envs.map do |k, v|

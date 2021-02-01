@@ -11,7 +11,8 @@ module Hanami
 
           def call(config: '', **)
             super
-            exec Webpack.enviroment_variables, webpack_exe, *Webpack.webpack_cli_arguments
+            name = File.basename(webpack_exe)
+            exec Webpack.environment_variables, "yarn", "run", name, *Webpack.webpack_cli_arguments
           end
 
           private def webpack_exe

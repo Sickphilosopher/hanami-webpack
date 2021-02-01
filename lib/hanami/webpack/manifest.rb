@@ -10,12 +10,12 @@ module Hanami
       def self.bundle_uri(bundle_name, type: :js, app: null)
         bundle = get_bundle(bundle_name, app)
         path = bundle.fetch(type.to_s)
-        build_path(path)
+        build_path(path, app)
       end
 
-      def self.build_path(path)
+      def self.build_path(path, app)
         if Webpack.use_dev_server?
-          return "#{dev_server_path}#{Utils::PathPrefix.new('/').join(path)}"
+          return "#{dev_server_path(app)}#{Utils::PathPrefix.new('/').join(path)}"
         end
 
         Utils::PathPrefix.new('/').join(Webpack.config.output_path).join(path).to_s
@@ -45,8 +45,9 @@ module Hanami
         Hanami.root.join(Webpack.config.manifest.dir, filename)
       end
 
-      def self.dev_server_path
-        "//#{Webpack.config.dev_server.host}:#{Webpack.config.dev_server.port}"
+      def self.dev_server_path(app)
+        port = Webpack.config.dev_server.ports[app]
+        "//#{Webpack.config.dev_server.host}:#{port}"
       end
     end
   end
